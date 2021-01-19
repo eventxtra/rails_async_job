@@ -1,0 +1,20 @@
+class Create<%= class_name %> < ActiveRecord::Migration<%= migration_version %>
+  def up
+    say_with_time("Creating table for rails_async_job") do
+      create_table :<%= table_name %> do |t|
+        t.string :job_id
+        t.string :status
+        t.string :type
+        t.jsonb :json_attributes, default: {}
+
+        t.timestamps null: false
+      end
+    end
+  end
+
+  def down
+    say_with_time("Dropping table for rails_async_job") do
+      drop_table :<%= table_name %>
+    end
+  end
+end

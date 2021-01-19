@@ -8,19 +8,22 @@ module RailsAsyncJob
   class Error < StandardError; end
 
   def self.included(base)
+    super
     base.include InstanceMethods
     base.extend ClassMethods
   end
 
   module InstanceMethods
     def self.included(base)
+      super
       base.include AttrJson::Record
-
       base.extend Enumerize
-      base.enumerize :status, in: %i[pending working completed failed], scope: true, default: :pending
 
-      base.before_create :check_precondition
-      base.after_commit :delay_perform, on: :create
+      base.class_eval do
+        enumerize :status, in: %i[pending working completed failed], scope: true, default: :pending
+        before_create :check_precondition
+        after_commit :delay_perform, on: :create
+      end
     end
 
     def delay_perform

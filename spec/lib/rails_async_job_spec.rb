@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe RailsAsyncJob do
@@ -32,9 +34,9 @@ describe RailsAsyncJob do
       subject { TestJob.new(status: :pending) }
 
       it 'does not throw :abort' do
-        expect {
+        expect do
           subject.check_precondition
-        }.to_not throw_symbol :abort
+        end.not_to throw_symbol :abort
       end
     end
 
@@ -42,18 +44,18 @@ describe RailsAsyncJob do
       subject { TestJob.new(status: :working) }
 
       it 'throws :abort' do
-        expect {
+        expect do
           subject.check_precondition
-        }.to throw_symbol :abort
+        end.to throw_symbol :abort
       end
     end
   end
 
   describe '.perform' do
     it 'raises exception by default' do
-      expect {
+      expect do
         TestJob.new.perform
-      }.to raise_error 'perform not undefined for job TestJob'
+      end.to raise_error 'perform not undefined for job TestJob'
     end
 
     context 'when sub-class overrides this method' do

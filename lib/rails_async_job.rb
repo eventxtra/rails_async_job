@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_async_job/version'
 require 'active_record'
 require 'attr_json'
@@ -27,7 +29,7 @@ module RailsAsyncJob
     end
 
     def delay_perform
-      self.update job_id: self.class.delay.perform_job(self.id)
+      update job_id: self.class.delay.perform_job(id)
     end
 
     def perform_job
@@ -78,7 +80,7 @@ module RailsAsyncJob
 
   module ClassMethods
     def self.perform_job(job_id)
-      self.find(job_id)&.perform_job
+      find(job_id)&.perform_job
     end
   end
 end

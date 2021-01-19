@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'activerecord', '>= 5.2'
+  spec.add_dependency 'activesupport', '>= 5.2'
   spec.add_dependency 'attr_json', '>= 0.7'
   spec.add_dependency 'enumerize', '~> 2'
   spec.add_dependency 'sidekiq', '~> 6'

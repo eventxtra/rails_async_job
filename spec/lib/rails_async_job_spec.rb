@@ -65,8 +65,6 @@ describe RailsAsyncJob do
             'TextJobSubclass'
           end
 
-          include RailsAsyncJob
-
           def perform
             'hello'
           end
@@ -75,6 +73,22 @@ describe RailsAsyncJob do
 
       it 'works' do
         expect(TextJobSubclass.new.perform).to eq 'hello'
+      end
+    end
+
+    context 'when sub-class does not override this method' do
+      before do
+        stub_const('TextJobSubclass', Class.new(TestJob) do
+          def self.name
+            'TextJobSubclass'
+          end
+        end)
+      end
+
+      it 'raises exception' do
+        expect do
+          TextJobSubclass.new.perform
+        end.to raise_error 'perform not undefined for job TextJobSubclass'
       end
     end
   end

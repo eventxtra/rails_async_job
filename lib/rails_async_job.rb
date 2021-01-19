@@ -2,6 +2,7 @@
 
 require 'rails_async_job/version'
 require 'active_record'
+require 'active_support/concern'
 require 'attr_json'
 require 'enumerize'
 require 'sidekiq'
@@ -9,24 +10,16 @@ require 'sidekiq'
 module RailsAsyncJob
   class Error < StandardError; end
 
-  def self.included(base)
-    super
-    base.include InstanceMethods
-    base.extend ClassMethods
-  end
+  extend ActiveSupport::Concern
 
-  module InstanceMethods
-    def self.included(base)
-      super
-      base.include AttrJson::Record
-      base.extend Enumerize
+  included do
+    include AttrJson::Record
+    extend Enumerize
 
-      base.class_eval do
-        enumerize :status, in: %i[pending working completed failed], scope: true, default: :pending
-        before_create :check_precondition
-        after_commit :delay_perform, on: :create
-      end
-    end
+    enumerize :status, in: %i[pending working completed failed], scope: true, default: :pending
+
+    before_create :check_precondition
+    after_commit :delay_perform, on: :create
 
     def delay_perform
       update job_id: self.class.delay.perform_job(id)
@@ -78,8 +71,8 @@ module RailsAsyncJob
     end
   end
 
-  module ClassMethods
-    def self.perform_job(job_id)
+  class_methods do
+    def perform_job(job_id)
       find(job_id)&.perform_job
     end
   end

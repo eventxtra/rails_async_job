@@ -1,4 +1,4 @@
-class Create<%= class_name %> < ActiveRecord::Migration<%= migration_version %>
+class Create<%= class_name.pluralize %> < ActiveRecord::Migration<%= migration_version %>
   def up
     say_with_time("Creating table for rails_async_job") do
       create_table :<%= table_name %> do |t|

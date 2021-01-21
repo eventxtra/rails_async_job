@@ -59,8 +59,8 @@ module RailsAsyncJob
         end
         fail_thrown = false
       end
-      thrown = :fail if fail_thrown
       thrown = :complete if complete_thrown
+      thrown = :fail if fail_thrown
 
       case thrown
       when :complete

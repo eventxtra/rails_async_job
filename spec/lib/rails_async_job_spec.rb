@@ -30,6 +30,24 @@ describe RailsAsyncJob do
       subject.check_precondition
     end
 
+    context 'when .with_terminator throws :fail' do
+      it 'sets job status to failed and throws :abort' do
+        allow(subject).to receive(:precondition).and_throw(:fail)
+        expect do
+          catch(:abort) { subject.check_precondition }
+        end.to change(subject, :status).to('failed')
+      end
+    end
+
+    context 'when .with_terminator throws :complete' do
+      it 'sets job status to completed and throws :abort' do
+        allow(subject).to receive(:precondition).and_throw(:complete)
+        expect do
+          catch(:abort) { subject.check_precondition }
+        end.to change(subject, :status).to('completed')
+      end
+    end
+
     context 'when status is :pending' do
       subject { TestJob.new(status: :pending) }
 

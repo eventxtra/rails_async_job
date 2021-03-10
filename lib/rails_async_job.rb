@@ -21,8 +21,12 @@ module RailsAsyncJob
     before_create :check_precondition
     after_commit :delay_perform, on: :create
 
+    def queue
+      'default'
+    end
+
     def delay_perform
-      update job_id: self.class.delay.perform_job(id)
+      update job_id: self.class.delay(queue: queue).perform_job(id)
     end
 
     def perform_job

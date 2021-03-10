@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/)
 
 To skip CI build, git commit with [ci skip] in commit message
 
+## [0.2.3] - 2021-03-10
+### Added
+- Support `:queue` option
+
 ## [0.2.2] - 2021-01-21
 ### Fixed
 - `.with_terminator` didn't set job status to 'failed' when cathing :fail
